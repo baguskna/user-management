@@ -27,6 +27,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User saveUser(User user) {
+        if (user.getEmail() == null || user.getUsername() == null || user.getEmail().isEmpty() || user.getUsername().isEmpty()) {
+            throw new IllegalArgumentException("Email and Username cannot be null");
+        }
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new IllegalArgumentException("Email already registered");
+        }
+        if (userRepository.existsByUsername(user.getUsername())) {
+            throw new IllegalArgumentException("Username already taken");
+        }
         return userRepository.save(user);
     }
 

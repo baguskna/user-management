@@ -21,11 +21,15 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        log.info("Received create user request with body: {}", user);
-        log.debug("User details - Email: {}", user);
-        User createdUser = userService.saveUser(user);
-        return ResponseEntity.ok(createdUser);
+    public ResponseEntity<?> createUser(@RequestBody User user) {
+        log.info("Received create user request with body: {}", user.toString());
+        try {
+            User createdUser = userService.saveUser(user);
+            return ResponseEntity.ok(createdUser);
+        } catch (Exception e) {
+            log.error("Error processing request: {}", e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping
