@@ -38,4 +38,15 @@ public class UserController {
         List<User> users = userService.findAllUsers();
         return ResponseEntity.ok(users);
     }
+
+    @PostMapping
+    public ResponseEntity<String> authenticateUser(@RequestParam String username, @RequestParam String password) {
+        log.info("Authenticating user with username: {}", username);
+        boolean isAuthenticated = userService.authenticateUser(username, password);
+        if (isAuthenticated) {
+            return ResponseEntity.ok("Authentication successful");
+        } else {
+            return ResponseEntity.status(401).body("Authentication failed");
+        }
+    }
 }

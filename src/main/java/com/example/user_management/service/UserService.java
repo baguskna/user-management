@@ -13,7 +13,7 @@ public interface UserService {
     User saveUser(User user);
 
     void deleteUserById(Long id);
-//    User authenticateUser(String username, String password);
+    boolean authenticateUser(String username, String password);
 //    User updateUser(User user);
 //    boolean usernameExists(String username);
 //    boolean emailExists(String email);
