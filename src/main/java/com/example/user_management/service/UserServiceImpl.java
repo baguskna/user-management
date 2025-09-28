@@ -2,11 +2,15 @@ package com.example.user_management.service;
 
 import com.example.user_management.dao.UserRepository;
 import com.example.user_management.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -16,16 +20,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> findAllUsers() {
-        return userRepository.findAll();
+    @Transactional(readOnly = true)
+    public Page<User> findAllUsers(Pageable pageable) {
+        return userRepository.findAll(pageable);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public User findUserById(Long id) {
-        return null;
+        return userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + id));
     }
 
     @Override
+    @Transactional
     public User saveUser(User user) {
         if (user.getEmail() == null || user.getUsername() == null || user.getEmail().isEmpty() || user.getUsername().isEmpty()) {
             throw new IllegalArgumentException("Email and Username cannot be null");
@@ -40,8 +48,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void deleteUserById(Long id) {
-
+        userRepository.deleteById(id);
     }
 
     @Override

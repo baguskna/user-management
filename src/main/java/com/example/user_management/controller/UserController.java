@@ -2,18 +2,19 @@ package com.example.user_management.controller;
 
 import com.example.user_management.entity.User;
 import com.example.user_management.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
-    
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
+
     private final UserService userService;
 
     public UserController(UserService userService) {
@@ -33,13 +34,13 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
-        log.info("Fetching all users");
-        List<User> users = userService.findAllUsers();
+    public ResponseEntity<Page<User>> getAllUsers(Pageable pageable) {
+        log.info("Fetching users with pagination");
+        Page<User> users = userService.findAllUsers(pageable);
         return ResponseEntity.ok(users);
     }
 
-    @PostMapping
+    @PostMapping("/authenticate")
     public ResponseEntity<String> authenticateUser(@RequestParam String username, @RequestParam String password) {
         log.info("Authenticating user with username: {}", username);
         boolean isAuthenticated = userService.authenticateUser(username, password);

@@ -1,12 +1,12 @@
 package com.example.user_management.service;
 
 import com.example.user_management.entity.User;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface UserService {
 
-    List<User> findAllUsers();
+    Page<User> findAllUsers(Pageable pageable);
 
     User findUserById(Long id);
 
